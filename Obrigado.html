@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Obrigado! – Nox Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --g1:#2ecc40;--g2:#27ae38;--g3:#1a7a28;--gg:#2ecc4055;
+  --br1:#a0693a;--br2:#7a4e2a;--br3:#4a2e10;
+  --tan:#d4a96a;--cream:#f0e8d0;
+  --dark:#0c1208;--dark2:#111a0d;--card:#0f1a0b;
+  --border:#2ecc4028;--amber:#ffb840;
+  --px:'Press Start 2P',monospace;--bd:'Nunito',sans-serif;
+}
+body{background:var(--dark);color:var(--cream);font-family:var(--bd);overflow-x:hidden;min-height:100vh}
+
+/* NOISE */
+body::after{content:'';position:fixed;inset:0;z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  pointer-events:none;opacity:.5}
+
+/* PIXEL RAIN */
+.pfield{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.px{position:absolute;bottom:-40px;width:10px;height:10px;background:var(--g2);animation:rpx linear infinite;opacity:0}
+.px:nth-child(odd){background:var(--br1);width:8px;height:8px}
+.px:nth-child(3n){background:var(--g3);width:14px;height:14px}
+@keyframes rpx{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.3}90%{opacity:.15}100%{transform:translateY(-110vh) rotate(540deg);opacity:0}}
+
+/* CONFETTI */
+.confetti-wrap{position:fixed;top:0;left:0;right:0;z-index:100;pointer-events:none;overflow:hidden;height:100vh}
+.cf{position:absolute;top:-20px;width:10px;height:10px;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1}100%{transform:translateY(110vh) rotate(720deg) scale(.5);opacity:0}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
+  justify-content:space-between;padding:0 24px;height:64px;
+  background:rgba(12,18,8,.97);border-bottom:1px solid var(--border)}
+.nbrand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nbrand .logo{width:38px;height:38px;border-radius:50%;border:2px solid var(--g2);
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,#1a3015,#0a1208);font-size:1.2rem}
+.nbrand span{font-family:var(--px);font-size:.52rem;color:var(--g1);line-height:1.6}
+.nav-back{font-size:.8rem;font-weight:800;color:var(--tan);text-decoration:none;
+  display:flex;align-items:center;gap:6px;transition:color .2s}
+.nav-back:hover{color:var(--g1)}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px}
+.hbg{position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#27ae3820 0%,transparent 65%),
+  linear-gradient(160deg,#0c1208 0%,#131f0e 55%,#0c1810 100%)}
+
+/* CHECK ANIMATION */
+.check-wrap{width:100px;height:100px;border-radius:50%;background:var(--g2);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 28px;
+  box-shadow:0 0 0 0 var(--gg);animation:pulse 2s ease-in-out infinite, popin .6s ease both}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #2ecc4055}50%{box-shadow:0 0 0 20px #2ecc4000}}
+@keyframes popin{0%{transform:scale(0) rotate(-180deg);opacity:0}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.check-wrap .ck{font-size:3rem;line-height:1}
+
+.badge{display:inline-block;background:var(--br3);border:1px solid var(--g2);
+  color:var(--g1);font-family:var(--px);font-size:.44rem;letter-spacing:.15em;
+  padding:8px 18px;border-radius:2px;margin-bottom:20px;
+  box-shadow:0 0 14px var(--gg);animation:fup .6s ease both}
+.htitle{font-family:var(--px);font-size:clamp(1rem,4vw,2rem);line-height:1.5;
+  color:#fff;text-shadow:4px 4px 0 var(--g3),0 0 40px var(--gg);
+  animation:fup .7s .1s ease both}
+.htitle .ac{color:var(--g1)}
+.hsub{margin-top:20px;font-size:1.05rem;font-weight:700;color:var(--tan);
+  max-width:500px;line-height:1.85;animation:fup .7s .2s ease both}
+
+/* DOWNLOAD BOX */
+.dl-box{margin-top:40px;background:var(--card);border:2px solid var(--g2);
+  border-radius:6px;padding:32px 28px;max-width:480px;width:100%;
+  box-shadow:0 0 40px var(--gg);animation:fup .8s .3s ease both}
+.dl-box h3{font-family:var(--px);font-size:.65rem;color:#fff;margin-bottom:8px;line-height:1.8}
+.dl-box p{font-size:.9rem;color:var(--tan);line-height:1.75;margin-bottom:24px}
+.dl-steps{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:24px;text-align:left}
+.dl-step{display:flex;gap:12px;align-items:flex-start}
+.dl-step .n{font-family:var(--px);font-size:.5rem;color:var(--g1);min-width:24px;padding-top:2px}
+.dl-step .t{font-size:.88rem;color:var(--cream);line-height:1.7}
+.btn-dl{display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:16px;font-family:var(--bd);font-size:1rem;font-weight:900;
+  letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  background:var(--g2);color:#fff;border:none;cursor:pointer;border-radius:4px;
+  box-shadow:0 0 0 2px var(--g3),4px 4px 0 var(--g3);
+  transition:transform .15s,box-shadow .15s}
+.btn-dl:hover{transform:translate(-2px,-2px);box-shadow:0 0 0 2px var(--g3),6px 6px 0 var(--g3),0 0 20px var(--gg)}
+
+@keyframes fup{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+/* PIXEL DIVIDER */
+.pdiv{width:100%;height:20px;
+  background:repeating-linear-gradient(90deg,var(--g3) 0 24px,var(--br3) 24px 48px,var(--g2) 48px 72px,var(--br2) 72px 96px);
+  opacity:.38;margin:0}
+
+/* UPSELL */
+.upsell{position:relative;z-index:1;padding:80px 24px;background:var(--dark2)}
+.upsell-inner{max-width:900px;margin:0 auto}
+.sec-label{font-family:var(--px);font-size:.46rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--g1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'▶';font-size:.5rem}
+.sec-title{font-family:var(--px);font-size:clamp(.9rem,2.5vw,1.4rem);color:#fff;line-height:1.7;margin-bottom:10px}
+.sec-title .ac{color:var(--g1)}
+.sec-desc{font-size:1rem;color:var(--tan);max-width:560px;line-height:1.8;margin-bottom:48px}
+
+.upsell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.ucard{background:var(--card);border:1px solid var(--border);border-radius:4px;
+  overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;position:relative}
+.ucard:hover{transform:translateY(-6px);box-shadow:0 20px 48px #00000099,0 0 0 1px var(--g2);border-color:var(--g2)}
+.ucard-thumb{height:140px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#1a3015,#0a1208);font-size:3.5rem;
+  position:relative}
+.ucard-thumb::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff04 3px 4px)}
+.uribbon{position:absolute;top:10px;right:-6px;font-family:var(--px);font-size:.38rem;
+  padding:5px 14px 5px 10px;border-radius:2px 0 0 2px;text-transform:uppercase}
+.rf{background:var(--g2);color:#fff;box-shadow:-2px 2px 0 var(--g3)}
+.rh{background:#c0392b;color:#fff;box-shadow:-2px 2px 0 #7b241c}
+.rbundle{background:var(--amber);color:var(--dark);box-shadow:-2px 2px 0 #9a6a10}
+.ubody{padding:20px 18px 22px}
+.ucat{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--g1);margin-bottom:6px}
+.uname{font-family:var(--px);font-size:.65rem;color:#fff;line-height:1.8;margin-bottom:8px}
+.udesc{font-size:.87rem;color:var(--tan);line-height:1.7;margin-bottom:16px}
+.uprice-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.uprice{font-family:var(--px);font-size:.8rem}
+.uprice.free{color:var(--g1)}.uprice.hot{color:#e74c3c}.uprice.bundle{color:var(--amber)}
+.old-price{font-size:.75rem;color:#555;text-decoration:line-through;font-weight:700}
+.saving{font-size:.72rem;font-weight:800;color:#e74c3c;background:#fdecea;padding:2px 8px;border-radius:2px}
+.ubtn{display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:12px;font-family:var(--bd);font-size:.85rem;font-weight:900;
+  letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  border:none;cursor:pointer;border-radius:4px;transition:transform .15s,box-shadow .15s}
+.ubtn-g{background:var(--g2);color:#fff;box-shadow:0 0 0 2px var(--g3),3px 3px 0 var(--g3)}
+.ubtn-g:hover{transform:translate(-1px,-1px);box-shadow:0 0 0 2px var(--g3),5px 5px 0 var(--g3)}
+.ubtn-r{background:#c0392b;color:#fff;box-shadow:0 0 0 2px #7b241c,3px 3px 0 #7b241c}
+.ubtn-r:hover{transform:translate(-1px,-1px);box-shadow:0 0 0 2px #7b241c,5px 5px 0 #7b241c}
+.ubtn-a{background:var(--amber);color:var(--dark);box-shadow:0 0 0 2px #c8902a,3px 3px 0 #9a6a10}
+.ubtn-a:hover{transform:translate(-1px,-1px);box-shadow:0 0 0 2px #c8902a,5px 5px 0 #9a6a10}
+.ubtn-o{background:transparent;color:var(--tan);border:2px solid var(--br1);box-shadow:3px 3px 0 var(--br3)}
+.ubtn-o:hover{transform:translate(-1px,-1px);background:var(--br3);color:var(--cream)}
+
+/* TIMER */
+.timer-wrap{background:var(--card);border:1px solid #e74c3c44;border-radius:4px;
+  padding:20px 24px;margin-bottom:32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.timer-icon{font-size:2rem}
+.timer-text strong{display:block;font-family:var(--px);font-size:.55rem;color:#e74c3c;margin-bottom:4px;line-height:1.6}
+.timer-text span{font-size:.88rem;color:var(--tan)}
+.timer-count{font-family:var(--px);font-size:1.2rem;color:#e74c3c;
+  background:#1a0808;border:1px solid #e74c3c44;padding:8px 16px;border-radius:4px;
+  letter-spacing:.1em;min-width:100px;text-align:center}
+
+/* GUARANTEE */
+.guarantee{position:relative;z-index:1;padding:60px 24px;background:var(--dark)}
+.guarantee-inner{max-width:700px;margin:0 auto;text-align:center}
+.g-icon{font-size:3.5rem;margin-bottom:16px;filter:drop-shadow(0 0 12px #2ecc4066)}
+.g-title{font-family:var(--px);font-size:clamp(.8rem,2vw,1.1rem);color:#fff;line-height:1.7;margin-bottom:12px}
+.g-desc{font-size:.95rem;color:var(--tan);line-height:1.8}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:28px 24px;text-align:center;position:relative;z-index:1}
+.finn{max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:12px}
+.fbrand{font-family:var(--px);font-size:.5rem;color:var(--g1)}
+.flinks{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.flinks a{font-size:.8rem;color:var(--tan);text-decoration:none;font-weight:700;transition:color .2s}
+.flinks a:hover{color:var(--g1)}
+.fcopy{font-size:.75rem;color:#2ecc4040}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+@media(max-width:600px){
+  .dl-box{padding:24px 18px}
+  .timer-wrap{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="pfield" id="pf"></div>
+<div class="confetti-wrap" id="confetti"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nbrand" href="index.html">
+    <div class="logo">🔥</div>
+    <span>NOX<br>GAMES</span>
+  </a>
+  <a class="nav-back" href="index.html">← Voltar ao site</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hbg"></div>
+
+  <div class="check-wrap"><span class="ck">✓</span></div>
+  <div class="badge">🎉 Compra Confirmada!</div>
+  <h1 class="htitle">OBRIGADO PELA<br><span class="ac">SUA COMPRA!</span></h1>
+  <p class="hsub">Seu SCskin Editor está pronto para download. Crie skins incríveis para o OrizonCraft!</p>
+
+  <!-- DOWNLOAD BOX -->
+  <div class="dl-box">
+    <h3>📦 BAIXAR SEU APP</h3>
+    <p>Clique no botão abaixo para baixar o SCskin Editor. Guarde o arquivo em um lugar seguro!</p>
+    <ol class="dl-steps">
+      <li class="dl-step"><span class="n">01</span><span class="t">Clique em <strong>Baixar SCskin Editor</strong> abaixo</span></li>
+      <li class="dl-step"><span class="n">02</span><span class="t">Ative <strong>Fontes desconhecidas</strong> nas configurações do Android</span></li>
+      <li class="dl-step"><span class="n">03</span><span class="t">Abra o arquivo baixado e instale normalmente</span></li>
+    </ol>
+    <a href="https://drive.google.com/uc?export=download&id=11XDVRtvX_ssnqU7l3KxzdguKNw5cIdfj" target="_blank" class="btn-dl">
+      ⬇️ BAIXAR SCSKIN EDITOR
+    </a>
+  </div>
+</section>
+
+<div class="pdiv"></div>
+
+<!-- UPSELL -->
+<section class="upsell">
+  <div class="upsell-inner">
+
+    <!-- TIMER -->
+    <div class="timer-wrap rv">
+      <div class="timer-icon">⏰</div>
+      <div class="timer-text">
+        <strong>OFERTA EXCLUSIVA PÓS-COMPRA!</strong>
+        <span>Aproveite estas ofertas especiais. Disponíveis por tempo limitado:</span>
+      </div>
+      <div class="timer-count" id="timer">15:00</div>
+    </div>
+
+    <div class="sec-label">Exclusivo para você</div>
+    <h2 class="sec-title">APROVEITE ESSAS <span class="ac">OFERTAS ESPECIAIS</span></h2>
+    <p class="sec-desc">Como cliente Nox Games, você tem acesso a ofertas exclusivas que não aparecem em nenhum outro lugar.</p>
+
+    <div class="upsell-grid">
+
+      <!-- UPSELL 1 — Pack de Skins -->
+      <div class="ucard rv d1">
+        <div class="ucard-thumb">
+          <div class="uribbon rh">🔥 Oferta</div>
+          🎨
+        </div>
+        <div class="ubody">
+          <p class="ucat">Pack Exclusivo</p>
+          <h3 class="uname">PACK 10 SKINS PREMIUM</h3>
+          <p class="udesc">10 skins exclusivas criadas pela Nox Games, prontas para usar no OrizonCraft. Inclui guerreiros, magos, exploradores e mais.</p>
+          <div class="uprice-row">
+            <span class="uprice hot">R$ 4,99</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span class="old-price">R$ 9,99</span>
+              <span class="saving">-50%</span>
+            </div>
+          </div>
+          <!-- Troque o href pelo link do Kiwify do pack de skins -->
+          <a href="#" class="ubtn ubtn-r">🎨 QUERO O PACK</a>
+        </div>
+      </div>
+
+      <!-- UPSELL 2 — OrizonCraft VIP -->
+      <div class="ucard rv d2">
+        <div class="ucard-thumb">
+          <div class="uribbon rbundle">⭐ Bundle</div>
+          🏆
+        </div>
+        <div class="ubody">
+          <p class="ucat">Bundle · VIP</p>
+          <h3 class="uname">SCSKIN EDITOR + PACK VIP</h3>
+          <p class="udesc">Você já tem o editor — agora complete com o Pack VIP: 20 skins exclusivas + atualizações vitalícias + suporte prioritário.</p>
+          <div class="uprice-row">
+            <span class="uprice bundle">R$ 9,99</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span class="old-price">R$ 19,99</span>
+              <span class="saving">-50%</span>
+            </div>
+          </div>
+          <!-- Troque o href pelo link do Bundle no Kiwify -->
+          <a href="#" class="ubtn ubtn-a">⭐ QUERO O BUNDLE</a>
+        </div>
+      </div>
+
+      <!-- UPSELL 3 — Comunidade Discord VIP -->
+      <div class="ucard rv d3">
+        <div class="ucard-thumb">
+          <div class="uribbon rf">Grátis</div>
+          💬
+        </div>
+        <div class="ubody">
+          <p class="ucat">Comunidade</p>
+          <h3 class="uname">DISCORD NOX GAMES</h3>
+          <p class="udesc">Entre no servidor da comunidade! Receba updates em primeira mão, tire dúvidas e compartilhe suas skins com outros jogadores.</p>
+          <div class="uprice-row">
+            <span class="uprice free">GRÁTIS</span>
+          </div>
+          <!-- Troque pelo link do seu Discord -->
+          <a href="https://discord.gg/noxgames" target="_blank" class="ubtn ubtn-g">💬 ENTRAR NO DISCORD</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="pdiv"></div>
+
+<!-- GARANTIA -->
+<section class="guarantee">
+  <div class="guarantee-inner rv">
+    <div class="g-icon">🛡️</div>
+    <h2 class="g-title">SATISFAÇÃO GARANTIDA</h2>
+    <p class="g-desc">Se tiver qualquer problema com o SCskin Editor, entre em contato pelo Discord ou redes sociais da Nox Games. Estamos aqui para ajudar! 🎮</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="finn">
+    <div class="fbrand">🔥 NOX GAMES STUDIO</div>
+    <nav class="flinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#apps">Apps</a>
+      <a href="index.html#skins">Skins</a>
+      <a href="index.html#contato">Contato</a>
+    </nav>
+    <p class="fcopy">© 2025 Nox Games · SCskin Editor · Obrigado pela compra!</p>
+  </div>
+</footer>
+
+<script>
+/* PIXEL RAIN */
+(function(){
+  var f=document.getElementById('pf');
+  for(var i=0;i<20;i++){
+    var p=document.createElement('div');p.className='px';
+    p.style.left=(Math.random()*100)+'%';
+    p.style.animationDuration=(9+Math.random()*14)+'s';
+    p.style.animationDelay=(Math.random()*-22)+'s';
+    f.appendChild(p);
+  }
+})();
+
+/* CONFETTI */
+(function(){
+  var wrap=document.getElementById('confetti');
+  var colors=['#2ecc40','#ffb840','#e74c3c','#3498db','#d4a96a','#ffffff'];
+  var shapes=['■','●','▲','◆','★'];
+  for(var i=0;i<60;i++){
+    var el=document.createElement('div');
+    el.className='cf';
+    el.style.left=(Math.random()*100)+'%';
+    el.style.color=colors[Math.floor(Math.random()*colors.length)];
+    el.style.fontSize=(8+Math.random()*14)+'px';
+    el.style.animationDuration=(2+Math.random()*3)+'s';
+    el.style.animationDelay=(Math.random()*2)+'s';
+    el.innerHTML=shapes[Math.floor(Math.random()*shapes.length)];
+    wrap.appendChild(el);
+  }
+  // Remove confetti after 5s
+  setTimeout(function(){wrap.style.display='none';},5000);
+})();
+
+/* COUNTDOWN TIMER — 15 minutes */
+(function(){
+  var total=15*60;
+  var el=document.getElementById('timer');
+  var iv=setInterval(function(){
+    total--;
+    if(total<=0){clearInterval(iv);el.textContent='00:00';el.style.color='#888';return;}
+    var m=Math.floor(total/60);
+    var s=total%60;
+    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    if(total<=300){el.style.color='#e74c3c';el.style.animation='blink 1s ease-in-out infinite';}
+  },1000);
+})();
+
+/* SCROLL REVEAL */
+(function(){
+  var els=document.querySelectorAll('.rv');
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});
+  },{threshold:.1});
+  els.forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+  </html>
+            
